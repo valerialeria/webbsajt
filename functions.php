@@ -4,9 +4,9 @@ session_start();
 
 function connectToDb() {
     $dbHost = 'ostrawebb.se';
-    $dbUser = 'wsp2526_valmon';
-    $dbPassword = 'lefynijo49';
-    $dbDatabase = 'wsp2526_valmon';
+    $dbUser = 'wsp2526_isawes';
+    $dbPassword = 'jupigedi69';
+    $dbDatabase = 'wsp2526_isawes';
     $db = new mysqli($dbHost, $dbUser, $dbPassword, $dbDatabase);
     if($db->connect_error){ die("Connection failed: ".$db->connect_error);}
     return $db;
