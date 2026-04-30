@@ -47,9 +47,16 @@ header h1 {
 
 
 .container {
-    max-width: 800px;
+    max-width: 900px;
     margin: 40px auto;
     padding: 0 15px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.container form {
+    flex: 1;
 }
 
 
