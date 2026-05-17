@@ -1,12 +1,312 @@
-html {
-    background-color: #eee;
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
-    font-size: 14px;
-
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-p {
-    background-color: #fff;
-    margin: 0.5rem;
-    padding: 0.5rem;
+body {
+    font-family: Helvetica, Arial, sans-serif;
+    background: #001935;
+    color: white;
+    display: flex;
+    min-height: 100vh;
+}
+
+
+.sidebar {
+    width: 260px;
+    background: #001128;
+    padding: 30px 20px;
+    position: fixed;
+    height: 100vh;
+    border-right: 1px solid rgba(255,255,255,0.08);
+}
+
+.logo {
+    font-size: 34px;
+    font-weight: bold;
+    margin-bottom: 40px;
+}
+
+.logo span {
+    color: #ff8fab;
+}
+
+.sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.sidebar nav a {
+    color: white;
+    text-decoration: none;
+    padding: 12px 14px;
+    border-radius: 12px;
+    transition: 0.2s;
+    font-size: 16px;
+}
+
+.sidebar nav a:hover {
+    background: rgba(255,255,255,0.08);
+}
+
+
+.main-content {
+    margin-left: 260px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+
+.feed {
+    width: 100%;
+    max-width: 700px;
+}
+
+
+
+.post {
+    background: white;
+    color: black;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: #d94f7a;
+    margin-right: 12px;
+}
+
+.post-user {
+    font-weight: bold;
+}
+
+.post-date {
+    font-size: 13px;
+    color: gray;
+}
+
+.post-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.post-content {
+    line-height: 1.7;
+    font-size: 15px;
+}
+
+
+
+.post-form {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+.post-form h2 {
+    color: black;
+    margin-bottom: 15px;
+}
+
+input,
+textarea {
+    width: 100%;
+    border: none;
+    background: #f3f3f3;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    font-size: 15px;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+input[type="submit"] {
+    background: #ff8fab;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+    font-weight: bold;
+}
+
+input[type="submit"]:hover {
+    background: #ff3b5c;
+}
+
+
+
+.auth-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    gap: 20px;
+}
+
+.auth-box {
+    background: white;
+    color: black;
+    padding: 30px;
+    border-radius: 18px;
+    width: 350px;
+}
+
+.auth-box h2 {
+    margin-bottom: 20px;
+}
+
+
+
+.delete-btn {
+    display: inline-block;
+    margin-top: 15px;
+    color: #ff3b5c;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+
+
+.logout-btn {
+    margin-top: 40px !important;
+    color: #ff8fab !important;
+}
+
+/* CREATE POST PAGE */
+
+.create-post-card {
+    background: white;
+    border-radius: 18px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.create-post-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.create-post-header h1 {
+    color: black;
+    font-size: 28px;
+    margin-bottom: 5px;
+}
+
+.create-post-header p {
+    color: gray;
+    font-size: 14px;
+}
+
+.create-post-card textarea {
+    min-height: 220px;
+    resize: vertical;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.create-post-card input[type="submit"] {
+    width: 100%;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+/* PROFILE PAGE */
+
+.profile-header {
+    background: white;
+    border-radius: 18px;
+    overflow: hidden;
+    margin-bottom: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.profile-banner {
+    height: 220px;
+    background: linear-gradient(135deg, #001935, #00b8ff);
+}
+
+.profile-content {
+    padding: 25px;
+    margin-top: -70px;
+}
+
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid white;
+    background: #eee;
+}
+
+.profile-content h1 {
+    color: black;
+    margin-top: 15px;
+    font-size: 32px;
+}
+
+.profile-bio {
+    color: gray;
+    margin-top: 10px;
+    line-height: 1.6;
+}
+
+.profile-edit-card {
+    background: white;
+    padding: 25px;
+    border-radius: 18px;
+    margin-bottom: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.profile-edit-card h2 {
+    color: black;
+    margin-bottom: 20px;
+}
+
+.profile-edit-card label {
+    display: block;
+    color: black;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.profile-edit-card textarea {
+    min-height: 120px;
+}
+
+.profile-post-title {
+    margin-bottom: 20px;
+}
+
+.small-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 12px;
 }

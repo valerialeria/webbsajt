@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-
 function connectToDb() {
     $dbHost = 'ostrawebb.se';
     $dbUser = 'wsp2526_isawes';
@@ -80,4 +79,35 @@ function deletePost($db,$post_id,$user_id){
     $stmt->bind_param("ii",$post_id,$user_id);
     $stmt->execute();
 }
+
+function updateProfile($db, $user_id, $bio, $profile_picture){
+
+    $stmt = $db->prepare(
+        "UPDATE blogg_users SET bio=?, profile_picture=? WHERE id=?"
+    );
+
+    $stmt->bind_param(
+        "ssi",
+        $bio,
+        $profile_picture,
+        $user_id
+    );
+
+    $stmt->execute();
+}
+
+function getUserPosts($db, $user_id){
+
+    $stmt = $db->prepare(
+        "SELECT * FROM blogg_posts WHERE user_id=? ORDER BY created_at DESC"
+    );
+
+    $stmt->bind_param("i", $user_id);
+
+    $stmt->execute();
+
+    return $stmt->get_result();
+}
+
+
 ?>
