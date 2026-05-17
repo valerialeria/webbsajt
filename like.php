@@ -5,7 +5,10 @@ isLoggedIn();
 
 $post_id = (int)($_GET['id'] ?? 0);
 
-deletePost($db,$post_id,$_SESSION["userId"]);
+if ($post_id > 0) {
+    likePost($db, $_SESSION["userId"], $post_id);
+}
+
 header("Location: members.php");
 exit();
 ?>

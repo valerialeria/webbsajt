@@ -22,7 +22,7 @@ $db = connectToDb();
     <div class="logo">tun<span>dlr</span></div>
 
     <nav>
-        <a href="index.php">Hem</a>
+        <a href="index.php">Logga in</a>
     </nav>
 </div>
 

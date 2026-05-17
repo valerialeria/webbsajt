@@ -53,9 +53,9 @@ function getPosts($db){
     return $db->query("SELECT blogg_posts.*, blogg_users.username FROM blogg_posts JOIN blogg_users ON blogg_posts.user_id = blogg_users.id ORDER BY blogg_posts.created_at DESC");
 }
 
-function savePost($db,$user_id,$title,$content){
-    $stmt = $db->prepare("INSERT INTO blogg_posts(user_id,title,content,created_at) VALUES(?,?,?,NOW())");
-    $stmt->bind_param("iss",$user_id,$title,$content);
+function savePost($db, $user_id, $title, $content, $image = null) {
+    $stmt = $db->prepare("INSERT INTO blogg_posts(user_id, title, content, image, created_at) VALUES(?,?,?,?,NOW())");
+    $stmt->bind_param("isss", $user_id, $title, $content, $image);
     $stmt->execute();
 }
 
@@ -80,16 +80,27 @@ function deletePost($db,$post_id,$user_id){
     $stmt->execute();
 }
 
-function updateProfile($db, $user_id, $bio, $profile_picture){
+function updateProfile(
+    $db,
+    $user_id,
+    $bio,
+    $profile_picture,
+    $banner_image
+){
 
     $stmt = $db->prepare(
-        "UPDATE blogg_users SET bio=?, profile_picture=? WHERE id=?"
+        "UPDATE blogg_users
+         SET bio=?,
+             profile_picture=?,
+             banner_image=?
+         WHERE id=?"
     );
 
     $stmt->bind_param(
-        "ssi",
+        "sssi",
         $bio,
         $profile_picture,
+        $banner_image,
         $user_id
     );
 
@@ -107,6 +118,38 @@ function getUserPosts($db, $user_id){
     $stmt->execute();
 
     return $stmt->get_result();
+}
+
+function likePost($db, $user_id, $post_id) {
+    // Toggle: insert if not liked, delete if already liked
+    $check = $db->prepare("SELECT id FROM blogg_likes WHERE user_id=? AND post_id=?");
+    $check->bind_param("ii", $user_id, $post_id);
+    $check->execute();
+    $result = $check->get_result();
+
+    if ($result->num_rows > 0) {
+        $stmt = $db->prepare("DELETE FROM blogg_likes WHERE user_id=? AND post_id=?");
+        $stmt->bind_param("ii", $user_id, $post_id);
+        $stmt->execute();
+    } else {
+        $stmt = $db->prepare("INSERT INTO blogg_likes (user_id, post_id) VALUES (?, ?)");
+        $stmt->bind_param("ii", $user_id, $post_id);
+        $stmt->execute();
+    }
+}
+
+function getLikeCount($db, $post_id) {
+    $stmt = $db->prepare("SELECT COUNT(*) as count FROM blogg_likes WHERE post_id=?");
+    $stmt->bind_param("i", $post_id);
+    $stmt->execute();
+    return $stmt->get_result()->fetch_assoc()["count"];
+}
+
+function hasLiked($db, $user_id, $post_id) {
+    $stmt = $db->prepare("SELECT id FROM blogg_likes WHERE user_id=? AND post_id=?");
+    $stmt->bind_param("ii", $user_id, $post_id);
+    $stmt->execute();
+    return $stmt->get_result()->num_rows > 0;
 }
 
 
