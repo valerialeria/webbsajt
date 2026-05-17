@@ -7,7 +7,7 @@ $db = connectToDb();
 <html lang="sv">
 <head>
 <meta charset="UTF-8">
-<title>Min Webbplats</title>
+<title>Tundlr</title>
 <style>
 body {
     font-family: Arial, Helvetica, sans-serif;
@@ -158,7 +158,7 @@ input[type="submit"]:hover {
 <body>
 
 <header>
-<h1>Min Webbplats</h1>
+<h1>Tundlr</h1>
 </header>
 
 <div class="container">

@@ -163,7 +163,7 @@ input[type="submit"]:hover {
 <body>
 
 <header>
-    <h1>Min Webbplats</h1>
+    <h1>Tundlr</h1>
     <nav class="header-nav">
         <a href="post.php">Posts</a>
         <a href="members.php">Startsida</a>
