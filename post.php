@@ -8,13 +8,14 @@ $user = getUserByUsername($db, $_SESSION["username"]);
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $title   = trim($_POST["title"]);
     $content = trim($_POST["content"]);
+    $tags    = trim($_POST["tags"] ?? "");
     $image   = null;
 
     if (!empty($title) && !empty($content)) {
 
         if (isset($_FILES["image"]) && $_FILES["image"]["error"] == 0 && $_FILES["image"]["size"] > 0) {
-            $allowed_exts  = ["jpg", "jpeg", "png", "gif", "webp"];
-            $allowed_mimes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+            $allowed_exts  = ["jpg", "jpeg", "png", "webp"];
+            $allowed_mimes = ["image/jpeg", "image/png", "image/webp"];
 
             $ext  = strtolower(pathinfo($_FILES["image"]["name"], PATHINFO_EXTENSION));
             $mime = mime_content_type($_FILES["image"]["tmp_name"]);
@@ -27,6 +28,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         savePost($db, $_SESSION["userId"], $title, $content, $image);
+
+        // Hämta det nya inläggets ID och spara taggar
+        $new_post_id = $db->insert_id;
+        if (!empty($tags)) {
+            saveTags($db, $new_post_id, $tags);
+        }
+
         header("Location: members.php");
         exit();
     }
@@ -48,6 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <nav>
         <a href="profile.php">Profil</a>
         <a href="members.php">Dashboard</a>
+        <a href="following.php">Följer</a>
         <a class="logout-btn" href="index.php">Logga ut</a>
     </nav>
 
@@ -73,8 +82,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="text" name="title" placeholder="Rubrik" required>
 
                 <textarea name="content" placeholder="Vad tänker du på?" required></textarea>
+                <input type="text" name="tags" placeholder="Taggar: foto, konst, känslor (kommaseparerade)">
 
-                <!-- IMAGE UPLOAD -->
                 <div class="image-upload-area" id="uploadArea" onclick="document.getElementById('imageInput').click()">
                     <div class="image-upload-placeholder" id="uploadPlaceholder">
                         <span class="upload-icon">🖼</span>

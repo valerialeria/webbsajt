@@ -15,7 +15,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     $profile_picture = $user["profile_picture"] ?? "default.png";
     $banner_image = $user["banner_image"] ?? "default-banner.jpg";
 
-    // PROFILE PICTURE UPLOAD
+    // lägga upp profilbild
     if(isset($_FILES["profile_picture"]) && $_FILES["profile_picture"]["error"] == 0) {
 
         $fileName = time() . "_" . basename($_FILES["profile_picture"]["name"]);
@@ -28,7 +28,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         $profile_picture = $fileName;
     }
 
-    // BANNER UPLOAD
+    // Lägga upp bannerbild
     if(isset($_FILES["banner_image"]) && $_FILES["banner_image"]["error"] == 0) {
 
         $bannerName = time() . "_banner_" . basename($_FILES["banner_image"]["name"]);
@@ -73,6 +73,7 @@ $posts = getUserPosts($db, $user_id);
     <nav>
         <a href="profile.php">Profil</a>
         <a href="members.php">Dashboard</a>
+        <a href="following.php">Följer</a>
         <a class="logout-btn" href="index.php">Logga ut</a>
     </nav>
 
@@ -83,7 +84,6 @@ $posts = getUserPosts($db, $user_id);
 
     <div class="feed">
 
-        <!-- PROFILE HEADER -->
         <div class="profile-header">
 
             <div class="profile-banner"
@@ -102,7 +102,21 @@ $posts = getUserPosts($db, $user_id);
                     <?php echo nl2br(htmlspecialchars($user["bio"] ?? "Ingen bio ännu.")); ?>
                 </p>
 
-                <!-- EDIT BUTTON -->
+                <?php
+                    $follower_count  = getFollowerCount($db, $user_id);
+                    $following_count = getFollowingCount($db, $user_id);
+                ?>
+                <div class="profile-stats">
+                    <div class="stat">
+                        <span class="stat-number"><?php echo $follower_count; ?></span>
+                        <span class="stat-label">följare</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number"><?php echo $following_count; ?></span>
+                        <span class="stat-label">följer</span>
+                    </div>
+                </div>
+
                 <div class="edit-profile-wrapper">
                     <button class="edit-profile-btn" onclick="toggleEditProfile()">
                         ✎
@@ -112,7 +126,6 @@ $posts = getUserPosts($db, $user_id);
             </div>
         </div>
 
-        <!-- EDIT PROFILE PANEL -->
         <div id="editProfileCard" class="profile-edit-card hidden">
 
             <h2>Redigera profil</h2>
@@ -134,7 +147,6 @@ $posts = getUserPosts($db, $user_id);
 
         </div>
 
-        <!-- POSTS -->
         <h2>Mina inlägg</h2>
 
         <?php while($row = $posts->fetch_assoc()): ?>

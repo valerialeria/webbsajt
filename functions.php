@@ -121,7 +121,7 @@ function getUserPosts($db, $user_id){
 }
 
 function likePost($db, $user_id, $post_id) {
-    // Toggle: insert if not liked, delete if already liked
+    // Gillar eller ogillar ett inlägg
     $check = $db->prepare("SELECT id FROM blogg_likes WHERE user_id=? AND post_id=?");
     $check->bind_param("ii", $user_id, $post_id);
     $check->execute();
@@ -152,5 +152,104 @@ function hasLiked($db, $user_id, $post_id) {
     return $stmt->get_result()->num_rows > 0;
 }
 
+function saveTags($db, $post_id, $tags_string) {
+    // Rensa gamla taggar för detta inlägg
+    $stmt = $db->prepare("DELETE FROM blogg_tags WHERE post_id=?");
+    $stmt->bind_param("i", $post_id);
+    $stmt->execute();
+
+    // Dela upp och spara nya taggar
+    $tags = explode(",", $tags_string);
+    foreach ($tags as $tag) {
+        $tag = strtolower(trim(str_replace("#", "", $tag)));
+        if (!empty($tag)) {
+            $stmt = $db->prepare("INSERT INTO blogg_tags (post_id, tag) VALUES (?, ?)");
+            $stmt->bind_param("is", $post_id, $tag);
+            $stmt->execute();
+        }
+    }
+}
+
+function getTagsForPost($db, $post_id) {
+    $stmt = $db->prepare("SELECT tag FROM blogg_tags WHERE post_id=?");
+    $stmt->bind_param("i", $post_id);
+    $stmt->execute();
+    return $stmt->get_result();
+}
+
+function getPostsByTag($db, $tag) {
+    $stmt = $db->prepare("
+        SELECT blogg_posts.*, blogg_users.username 
+        FROM blogg_posts 
+        JOIN blogg_users ON blogg_posts.user_id = blogg_users.id
+        JOIN blogg_tags ON blogg_posts.id = blogg_tags.post_id
+        WHERE blogg_tags.tag = ?
+        ORDER BY blogg_posts.created_at DESC
+    ");
+    $stmt->bind_param("s", $tag);
+    $stmt->execute();
+    return $stmt->get_result();
+}
+
+
+
+
+
+
+function getUserById($db, $user_id) {
+    $stmt = $db->prepare("SELECT * FROM blogg_users WHERE id=?");
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    return $stmt->get_result()->fetch_assoc();
+}
+
+function followUser($db, $follower_id, $following_id) {
+    $check = $db->prepare("SELECT id FROM blogg_follows WHERE follower_id=? AND following_id=?");
+    $check->bind_param("ii", $follower_id, $following_id);
+    $check->execute();
+
+    if ($check->get_result()->num_rows > 0) {
+        $stmt = $db->prepare("DELETE FROM blogg_follows WHERE follower_id=? AND following_id=?");
+    } else {
+        $stmt = $db->prepare("INSERT INTO blogg_follows (follower_id, following_id) VALUES (?,?)");
+    }
+    $stmt->bind_param("ii", $follower_id, $following_id);
+    $stmt->execute();
+}
+
+function isFollowing($db, $follower_id, $following_id) {
+    $stmt = $db->prepare("SELECT id FROM blogg_follows WHERE follower_id=? AND following_id=?");
+    $stmt->bind_param("ii", $follower_id, $following_id);
+    $stmt->execute();
+    return $stmt->get_result()->num_rows > 0;
+}
+
+function getFollowerCount($db, $user_id) {
+    $stmt = $db->prepare("SELECT COUNT(*) as count FROM blogg_follows WHERE following_id=?");
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    return $stmt->get_result()->fetch_assoc()["count"];
+}
+
+function getFollowingCount($db, $user_id) {
+    $stmt = $db->prepare("SELECT COUNT(*) as count FROM blogg_follows WHERE follower_id=?");
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    return $stmt->get_result()->fetch_assoc()["count"];
+}
+
+function getFollowingFeed($db, $user_id) {
+    $stmt = $db->prepare("
+        SELECT blogg_posts.*, blogg_users.username
+        FROM blogg_posts
+        JOIN blogg_users ON blogg_posts.user_id = blogg_users.id
+        JOIN blogg_follows ON blogg_posts.user_id = blogg_follows.following_id
+        WHERE blogg_follows.follower_id = ?
+        ORDER BY blogg_posts.created_at DESC
+    ");
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    return $stmt->get_result();
+}
 
 ?>

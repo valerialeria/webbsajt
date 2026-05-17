@@ -23,6 +23,7 @@ $posts = getPosts($db);
     <nav>
         <a href="profile.php">Profil</a>
         <a href="members.php">Dashboard</a>
+        <a href="following.php">Följer</a>
         <a class="logout-btn" href="index.php">Logga ut</a>
     </nav>
 
@@ -51,9 +52,11 @@ $posts = getPosts($db);
                     alt="<?php echo htmlspecialchars($row['username']); ?>">
 
                 <div>
-                    <div class="post-user">
+                <div class="post-user">
+                    <a href="user.php?id=<?php echo $post_author['id']; ?>" class="username-link">
                         <?php echo htmlspecialchars($row["username"]); ?>
-                    </div>
+                    </a>
+                </div>
                     <div class="post-date">
                         <?php echo $row["created_at"]; ?>
                     </div>
@@ -68,6 +71,22 @@ $posts = getPosts($db);
             <div class="post-content">
                 <?php echo nl2br(htmlspecialchars($row["content"])); ?>
             </div>
+
+            <?php
+                $tags = getTagsForPost($db, $row["id"]);
+                $tag_list = [];
+                while ($t = $tags->fetch_assoc()) {
+                    $tag_list[] = $t["tag"];
+                }
+                if (!empty($tag_list)): ?>
+                    <div class="post-tags">
+                        <?php foreach ($tag_list as $tag): ?>
+                            <a href="tag.php?tag=<?php echo urlencode($tag); ?>" class="tag">
+                                #<?php echo htmlspecialchars($tag); ?>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
+            <?php endif; ?>
 
             <?php if (!empty($row["image"])): ?>
                 <div class="post-image">
@@ -88,7 +107,6 @@ $posts = getPosts($db);
                 <?php endif; ?>
             </div>
 
-                <!-- KOMMENTARER -->
             <?php
             $comments    = getComments($db, $row["id"]);
             $comment_count = $comments->num_rows;
@@ -117,7 +135,6 @@ $posts = getPosts($db);
                         </div>
                     <?php endwhile; ?>
 
-                    <!-- KOMMENTARSFORMULÄR -->
                     <form class="comment-form" action="comment_save.php" method="post">
                         <input type="hidden" name="post_id" value="<?php echo $row['id']; ?>">
                         <input type="text" name="comment" placeholder="Skriv en kommentar..." required>
