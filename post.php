@@ -55,7 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <nav>
         <a href="profile.php">Profil</a>
-        <a href="members.php">Dashboard</a>
+        <a href="members.php">Flödet</a>
         <a href="following.php">Följer</a>
         <a class="logout-btn" href="index.php">Logga ut</a>
     </nav>

@@ -10,7 +10,7 @@ $posts = getPosts($db);
 <html lang="sv">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard</title>
+    <title>Flödet</title>
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
@@ -19,7 +19,7 @@ $posts = getPosts($db);
     <div class="logo">tun<span>dlr</span></div>
     <nav>
         <a href="profile.php">Profil</a>
-        <a href="members.php">Dashboard</a>
+        <a href="members.php">Flödet</a>
         <a href="following.php">Följer</a>
         <a class="logout-btn" href="index.php">Logga ut</a>
     </nav>

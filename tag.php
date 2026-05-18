@@ -19,7 +19,7 @@ $posts = getPostsByTag($db, $tag);
     <div class="logo">tun<span>dlr</span></div>
     <nav>
         <a href="profile.php">Profil</a>
-        <a href="members.php">Dashboard</a>
+        <a href="members.php">Flödet</a>
         <a href="following.php">Följer</a>
         <a class="logout-btn" href="logout.php">Logga ut</a>
     </nav>
